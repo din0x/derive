@@ -29,15 +29,16 @@ multiplicative :: Parser Expr
 multiplicative = binary Mul simple
 
 binary :: Op -> Parser Expr -> Parser Expr
-binary op p = ((flip Infix <$> p) <*> whitespace opParser <*> whitespace p) <|> p
+binary op p = ((flip Infix <$> p) <*> whitespace opParser <*> whitespace self) <|> p
   where
+    self = binary op p
     opParser = op <$ char (opToChar op)
 
 whitespace :: Parser a -> Parser a
-whitespace p = (many (satisfy isSpace)) *> p
+whitespace p = (many (satisfy isSpace)) *> p <* (many (satisfy isSpace))
 
 simple :: Parser Expr
-simple = Number <$> int <|> Symbol <$> symbol
+simple = Number <$> int <|> Symbol <$> symbol <|> parenthesized parser
 
 char :: Char -> Parser Char
 char ch = Parser $ parseChar ch
@@ -50,3 +51,6 @@ symbol = some $ satisfy isLetter
 
 optional :: Parser a -> Parser (Maybe a)
 optional p = Just <$> p <|> pure Nothing
+
+parenthesized :: Parser a -> Parser a
+parenthesized p = (\_ a _ -> a) <$> char '(' <*> p <*> char ')'
