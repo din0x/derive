@@ -14,6 +14,7 @@ executable derive
     other-modules:
         Ast
         Parser
+        Solver
     default-language: Haskell2010
     ghc-options:      -Wall
     build-depends:    base ^>=4.18.3.0

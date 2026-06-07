@@ -8,12 +8,12 @@ data Expr
     = Number Int
     | Symbol String
     | Infix Op Expr Expr
-    deriving (Show, Eq)
+    deriving (Show, Eq, Ord)
 
 data Op
     = Add
     | Mul
-    deriving (Show, Eq)
+    deriving (Show, Eq, Ord)
 
 opToChar :: Op -> Char
 opToChar Add = '+'
