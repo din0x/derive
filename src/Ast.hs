@@ -1,7 +1,8 @@
 module Ast where
-import Parser (Parser (Parser), satisfy, parseChar)
-import Control.Applicative ((<|>), Alternative (some), many)
+
+import Control.Applicative (Alternative (some), many, (<|>))
 import Data.Char (isDigit, isLetter, isSpace)
+import Parser (Parser (Parser), parseChar, satisfy)
 
 data Expr
     = Number Int
@@ -29,8 +30,8 @@ multiplicative = binary Mul simple
 
 binary :: Op -> Parser Expr -> Parser Expr
 binary op p = ((flip Infix <$> p) <*> whitespace opParser <*> whitespace p) <|> p
-    where
-        opParser = op <$ char (opToChar op)
+  where
+    opParser = op <$ char (opToChar op)
 
 whitespace :: Parser a -> Parser a
 whitespace p = (many (satisfy isSpace)) *> p
