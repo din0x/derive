@@ -8,3 +8,4 @@ main = do
     let Parser p = parser
     line <- getLine
     print (p line)
+    main
